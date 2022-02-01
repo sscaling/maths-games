@@ -117,7 +117,7 @@ class Options extends React.Component {
         // given target generate some options
 
         let targets = this.state.targets.map((v) =>
-            <Option key={v} value={v} cb={target == v ? this.onSuccess : this.onFail} />
+            <Option key={v} value={v} cb={(target - 1) == v ? this.onSuccess : this.onFail} />
         );
         return (
             <div className="board-row">
@@ -130,7 +130,11 @@ class Options extends React.Component {
 function Result(props) {
     // useTraceUpdate(props);
     return (
-        <div>Result ? {props.result}</div>
+        <div>
+            <div>Result ? {props.result}</div>
+            <div>OK ? {props.ok}</div>
+            <div>Wrong ? {props.wrong}</div>
+        </div>
     )
 }
 
@@ -141,6 +145,8 @@ class Game extends React.Component {
         this.state = {
             result: false,
             target: _randBetween(0, Math.pow(props.size, 2)),
+            ok: 0,
+            wrong: 0,
         };
         this.handleClick = this.handleClick.bind(this);
     }
@@ -161,18 +167,24 @@ class Game extends React.Component {
 
         // let result = (this.state.target - 1) == v;
         // result ? window.alert('good') : window.alert('bad');
-        this.setState({
+        let update = {
             result: v,
             target: v ? _randBetween(0, Math.pow(this.props.size, 2)) : this.state.target,
-        });
+            ok: v ? this.state.ok + 1: this.state.ok,
+            wrong: v ? this.state.wrong : this.state.wrong + 1,
+        };
+        this.setState(update);
     }
 
+    // FIXME: pull shuffled items down into this method, then we can remove
+    //       the class approach and just use function components. Because the
+    //       shuffle happens in each render, it causes it to redraw (as far as I can tell)
     render() {
         return (
             <div>
                 <div>one less than {this.state.target}</div>
                 <Options target={this.state.target} cb={this.handleClick} />
-                <Result result={this.state.result ? "yay" : "nay"} />
+                <Result result={this.state.result ? "yay" : "nay"} ok={this.state.ok} wrong={this.state.wrong} />
                 <hr />
                 <NumberSquare size={this.props.size} target={this.state.target} />
             </div>
