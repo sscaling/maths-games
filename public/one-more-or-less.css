@@ -14,7 +14,19 @@
 }
 
 .square.target {
-    color: #f00;
+    background: #f00;
+}
+
+.question {
+    font-size:48px;
+    font-weight: bold;
+}
+
+.square.button {
+    height: 68px;
+    width: 84px;
+    font-size: 48px;
+    line-height: 70px;
 }
 
 .board-row:after {

@@ -63,9 +63,9 @@ function useTraceUpdate(props) {
 }
 
 function Option(props) {
-    useTraceUpdate(props);
+    // useTraceUpdate(props);
     return (
-        <div className="square" onClick={props.cb}>{props.value}</div>
+        <div className="square button" onClick={props.cb}>{props.value}</div>
     );
 }
 
@@ -182,7 +182,7 @@ class Game extends React.Component {
     render() {
         return (
             <div>
-                <div>one less than {this.state.target}</div>
+                <div class="question">one less than {this.state.target}</div>
                 <Options target={this.state.target} cb={this.handleClick} />
                 <Result result={this.state.result ? "yay" : "nay"} ok={this.state.ok} wrong={this.state.wrong} />
                 <hr />
