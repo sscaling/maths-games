@@ -87,7 +87,7 @@ class Options extends React.Component {
     //         );
     //     }
     // }
-    componentDidUpdate(prevProps, prevState) {
+    componentDidUpdate(prevProps, _prevState) {
         if (this.props.target != prevProps.target) {
             let t = this.props.target;
             this.setState({
@@ -131,19 +131,34 @@ function Result(props) {
             <div>OK ? {props.ok}</div>
             <div>Wrong ? {props.wrong}</div>
         </div>
-    )
+    );
+}
+
+function _question(target) {
+    let v = _randBetween(0,2);
+    if (v) {
+        return <span>{target} - 1 = ?</span>;
+    }
+    return <span>one less than {target}</span>;
+}
+
+function Question(props) {
+    return <div className="question">{props.question}</div>;
 }
 
 class Game extends React.Component {
     constructor(props) {
         super(props);
 
+        let target = _randBetween(0, Math.pow(props.size, 2));
         this.state = {
             result: false,
-            target: _randBetween(0, Math.pow(props.size, 2)),
+            target: target,
+            question: _question(target),
             ok: 0,
             wrong: 0,
         };
+
         this.handleClick = this.handleClick.bind(this);
     }
 
@@ -163,9 +178,11 @@ class Game extends React.Component {
 
         // let result = (this.state.target - 1) == v;
         // result ? window.alert('good') : window.alert('bad');
+        let target = v ? _randBetween(0, Math.pow(this.props.size, 2)) : this.state.target;
         let update = {
             result: v,
-            target: v ? _randBetween(0, Math.pow(this.props.size, 2)) : this.state.target,
+            target: target,
+            question: v ? _question(target) : this.state.question,
             ok: v ? this.state.ok + 1 : this.state.ok,
             wrong: v ? this.state.wrong : this.state.wrong + 1,
         };
@@ -178,7 +195,7 @@ class Game extends React.Component {
     render() {
         return (
             <div>
-                <div className="question">one less than {this.state.target}</div>
+                <Question question={this.state.question} />
                 <Options target={this.state.target} cb={this.handleClick} />
                 <Result result={this.state.result ? "yay" : "nay"} ok={this.state.ok} wrong={this.state.wrong} />
                 <hr />
@@ -190,4 +207,5 @@ class Game extends React.Component {
 
 const domContainer = document.getElementById("root")
 // const domContainer = document.querySelector("#root");
+// Here we probably need to make it width x height as we can simplify by 10's.
 ReactDOM.render(<Game size="10" />, domContainer);
