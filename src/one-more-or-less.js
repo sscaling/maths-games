@@ -25,26 +25,22 @@ function Square(props) {
     );
 }
 
-class NumberSquare extends React.Component {
+function NumberSquare(props) {
+    let _id = (i, j) => ((j + 1) + (i * dim));
 
-    render() {
-        let _id = (i, j) => ((j + 1) + (i * dim));
+    let board = [];
 
-        let board = [];
+    let dim = parseInt(props.size, 10);
+    for (let i = 0; i < dim; i++) {
+        board.push(<div className="board-row" key={i}>{
+            new Array(dim).fill(0).map((_, j) => (
+                <Square key={_id(i, j)} value={_id(i, j)} target={props.target} />
+            ))
+        }</div>)
+    };
 
-        let dim = parseInt(this.props.size, 10);
-        for (let i = 0; i < dim; i++) {
-            board.push(<div className="board-row" key={i}>{
-                new Array(dim).fill(0).map((_, j) => (
-                    <Square key={_id(i, j)} value={_id(i, j)} target={this.props.target} />
-                ))
-            }</div>)
-        };
-
-        return board;
-    }
+    return board;
 }
-
 
 function useTraceUpdate(props) {
     const prev = React.useRef(props);
@@ -170,7 +166,7 @@ class Game extends React.Component {
         let update = {
             result: v,
             target: v ? _randBetween(0, Math.pow(this.props.size, 2)) : this.state.target,
-            ok: v ? this.state.ok + 1: this.state.ok,
+            ok: v ? this.state.ok + 1 : this.state.ok,
             wrong: v ? this.state.wrong : this.state.wrong + 1,
         };
         this.setState(update);
